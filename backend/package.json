@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-  "test": "cross-env NODE_ENV=test jest --detectOpenHandles --forceExit"
-},
+    "test": "cross-env NODE_ENV=test jest --detectOpenHandles --forceExit"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
