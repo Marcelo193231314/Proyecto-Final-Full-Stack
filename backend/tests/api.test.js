@@ -7,16 +7,21 @@ let userToken = '';
 let createdMatchId = '';
 let teamIdToUpdate = 1;
 
+
+
+const uniqueAdminEmail = `admin_${Date.now()}@liga.com`;
+const uniqueUserEmail = `user_${Date.now()}@liga.com`;
+
 beforeAll(async () => {
     
     await request(app).post('/api/auth/register').send({ 
         name: 'Admin Master', 
-        email: 'adminmaster@liga.com', 
+        email: uniqueAdminEmail, 
         password: 'password123', 
         adminSecret: 'GOAT' 
     });
     const adminLogin = await request(app).post('/api/auth/login').send({ 
-        email: 'adminmaster@liga.com', 
+        email: uniqueAdminEmail, 
         password: 'password123' 
     });
     adminToken = adminLogin.body.token;
@@ -24,17 +29,18 @@ beforeAll(async () => {
     
     await request(app).post('/api/auth/register').send({ 
         name: 'User Master', 
-        email: 'usermaster@liga.com', 
+        email: uniqueUserEmail, 
         password: 'password123' 
     });
     const userLogin = await request(app).post('/api/auth/login').send({ 
-        email: 'usermaster@liga.com', 
+        email: uniqueUserEmail, 
         password: 'password123' 
     });
     userToken = userLogin.body.token;
 });
 
 afterAll(async () => {
+    
     await pool.end();
 });
 
@@ -43,7 +49,8 @@ describe('1. Pruebas de Autenticación y Registro (Auth)', () => {
     it('Debe denegar el registro de un admin con código secreto incorrecto', async () => {
         const res = await request(app)
             .post('/api/auth/register')
-            .send({ name: 'Fake Admin', email: 'fakeadmin@liga.com', password: '123', adminSecret: 'WRONG' });
+            
+            .send({ name: 'Fake Admin', email: `fake_${Date.now()}@liga.com`, password: '123', adminSecret: 'WRONG' });
         expect(res.statusCode).toEqual(403);
         expect(res.body).toHaveProperty('error', 'Código secreto incorrecto. Registro denegado.');
     });
@@ -51,7 +58,8 @@ describe('1. Pruebas de Autenticación y Registro (Auth)', () => {
     it('Debe registrar un nuevo usuario correctamente', async () => {
         const res = await request(app)
             .post('/api/auth/register')
-            .send({ name: 'Nuevo Jugador', email: 'jugador@liga.com', password: '123' });
+            
+            .send({ name: 'Nuevo Jugador', email: `jugador_${Date.now()}@liga.com`, password: '123' });
         expect(res.statusCode).toEqual(201);
         expect(res.body).toHaveProperty('message', 'Registro exitoso');
         expect(res.body.role).toEqual('user');
@@ -60,7 +68,8 @@ describe('1. Pruebas de Autenticación y Registro (Auth)', () => {
     it('Login exitoso y retorno de token', async () => {
         const res = await request(app)
             .post('/api/auth/login')
-            .send({ email: 'usermaster@liga.com', password: 'password123' });
+            
+            .send({ email: uniqueUserEmail, password: 'password123' });
         expect(res.statusCode).toEqual(200);
         expect(res.body).toHaveProperty('token');
         expect(res.body.user).toHaveProperty('role', 'user');
@@ -69,7 +78,7 @@ describe('1. Pruebas de Autenticación y Registro (Auth)', () => {
     it('Login fallido por contraseña incorrecta', async () => {
         const res = await request(app)
             .post('/api/auth/login')
-            .send({ email: 'usermaster@liga.com', password: 'wrongpassword' });
+            .send({ email: uniqueUserEmail, password: 'wrongpassword' });
         expect(res.statusCode).toEqual(401);
         expect(res.body).toHaveProperty('message', 'Contraseña incorrecta');
     });
@@ -113,7 +122,7 @@ describe('2. Pruebas de Gestión de Partidos (Matches)', () => {
 
     it('Debe actualizar el marcador y estado de un partido', async () => {
         const res = await request(app)
-            .patch(`/api/matches/${createdMatchId}/status`) 
+            .patch(`/api/matches/${createdMatchId}/status`)
             .set('Authorization', `Bearer ${adminToken}`)
             .send({ status: 'Finalizado', local_score: 3, visitor_score: 1 });
         expect(res.statusCode).toEqual(200);
