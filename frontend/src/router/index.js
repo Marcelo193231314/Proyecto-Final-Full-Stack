@@ -3,8 +3,9 @@ import LoginView from '../views/LoginView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import MatchesView from '../views/MatchesView.vue';
 import MatchFormView from '../views/MatchFormView.vue';
+import TeamsView from '../views/TeamsView.vue';
 import { useAuthStore } from '../stores/auth';
-
+import AdminDashboardView from '../views/AdminDashboardView.vue';
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -28,18 +29,32 @@ const router = createRouter({
       path: '/create-match',
       name: 'create-match',
       component: MatchFormView,
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: true, requiresAdmin: true }
+    },
+    {
+      path: '/teams',
+      name: 'teams',
+      component: TeamsView,
+      meta: { requiresAuth: true, requiresAdmin: true }
+    },
+    {
+      path: '/admin/users',
+      name: 'manage-users',
+      component: AdminDashboardView,
+      meta: { requiresAuth: true, requiresAdmin: true }
     }
   ]
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, from) => {
   const authStore = useAuthStore();
+  
   if (to.meta.requiresAuth && !authStore.token) {
-    next('/login');
-  } else {
-    next();
-  }
+    return '/login';
+  } 
+  else if (to.meta.requiresAdmin && authStore.user?.role !== 'admin') {
+    return '/'; 
+  } 
 });
 
 export default router;

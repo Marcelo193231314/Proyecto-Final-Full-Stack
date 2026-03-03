@@ -7,6 +7,7 @@
 
     <div class="actions" v-if="isAdmin">
       <button class="btn-primary" @click="router.push('/create-match')">Crear Nuevo Partido</button>
+      <button class="btn-secondary" @click="router.push('/teams')">Gestionar Equipos</button>
     </div>
 
     <div class="table-wrapper">
@@ -53,6 +54,7 @@
             <td v-if="isAdmin">
               <button @click="saveChanges(match)" class="btn-save" title="Guardar">💾</button>
               <button @click="simulate(match)" class="btn-sim" title="Simular Resultado">🎲</button>
+              <button @click="borrarPartido(match.id)" class="btn-delete" title="Eliminar Partido">🗑️</button>
             </td>
           </tr>
         </tbody>
@@ -74,8 +76,12 @@ const matches = ref([]);
 const isAdmin = computed(() => authStore.user?.role === 'admin');
 
 const fetchMatches = async () => {
-  const res = await api.get('/matches');
-  matches.value = res.data;
+  try {
+    const res = await api.get('/matches');
+    matches.value = res.data;
+  } catch (error) {
+    console.error("Error al cargar partidos", error);
+  }
 };
 
 const saveChanges = async (match) => {
@@ -86,7 +92,10 @@ const saveChanges = async (match) => {
       visitor_score: match.visitor_score
     });
     alert("Guardado correctamente");
-  } catch (e) { alert("Error al guardar"); }
+  } catch (e) { 
+    alert("Error al guardar"); 
+    console.error(e);
+  }
 };
 
 const simulate = (match) => {
@@ -96,23 +105,50 @@ const simulate = (match) => {
   saveChanges(match);
 };
 
+// NUEVA FUNCIÓN: Elimina el partido y recarga la tabla
+const borrarPartido = async (id) => {
+  const confirmar = confirm("¿Estás seguro de que deseas cancelar y eliminar este partido?");
+  if (confirmar) {
+    try {
+      await api.delete(`/matches/${id}`);
+      alert("Partido eliminado correctamente");
+      fetchMatches(); 
+    } catch (error) {
+      alert("Error al eliminar el partido");
+      console.error(error);
+    }
+  }
+};
+
 const formatDate = (str) => {
+  if (!str) return '';
   return new Date(str).toLocaleString('es-ES', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' });
 };
 
 onMounted(fetchMatches);
-const logout = () => { authStore.logout(); router.push('/login'); };
+
+const logout = () => { 
+  authStore.logout(); 
+  router.push('/login'); 
+};
 </script>
 
 <style scoped>
 .container { max-width: 1000px; margin: 40px auto; font-family: sans-serif; }
-.header { display: flex; justify-content: space-between; margin-bottom: 20px; }
+.header { display: flex; justify-content: space-between; margin-bottom: 20px; align-items: center; }
 .table-wrapper { background: white; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); overflow: hidden; }
 table { width: 100%; border-collapse: collapse; }
 th, td { padding: 15px; border-bottom: 1px solid #eee; text-align: center; }
 .score-container { display: flex; justify-content: center; align-items: center; gap: 5px; }
 .score-input { width: 35px; text-align: center; border: 1px solid #ccc; border-radius: 4px; }
-.btn-save, .btn-sim { background: none; border: none; cursor: pointer; font-size: 1.2rem; margin: 0 5px; }
+.btn-save, .btn-sim, .btn-delete { background: none; border: none; cursor: pointer; font-size: 1.2rem; margin: 0 5px; }
 .status-select { padding: 5px; border-radius: 4px; }
-.btn-primary { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-bottom: 10px; }
+
+.actions { margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap; }
+.btn-primary { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+.btn-secondary { background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+.btn-danger-nav { background: #343a40; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+.btn-logout { background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+
+button:hover { opacity: 0.9; }
 </style>

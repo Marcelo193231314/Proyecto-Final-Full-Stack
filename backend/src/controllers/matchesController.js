@@ -1,6 +1,5 @@
 const pool = require('../config/db');
 
-// Obtener todos los partidos con nombres de equipos y resultados
 const getMatches = async (req, res) => {
     try {
         const query = `
@@ -25,21 +24,21 @@ const getMatches = async (req, res) => {
     }
 };
 
-// Crear un partido
 const createMatch = async (req, res) => {
     try {
         const { local_team_id, visitor_team_id, match_date, location } = req.body;
+        
         const [result] = await pool.query(
-            'INSERT INTO matches (local_team_id, visitor_team_id, match_date, location) VALUES (?, ?, ?, ?)',
-            [local_team_id, visitor_team_id, match_date, location]
+            'INSERT INTO matches (local_team_id, visitor_team_id, match_date, location, status) VALUES (?, ?, ?, ?, ?)',
+            [local_team_id, visitor_team_id, match_date, location, 'Pendiente']
         );
-        res.status(201).json({ message: 'Partido creado', matchId: result.insertId });
+        
+        res.status(201).json({ message: 'Partido creado exitosamente', matchId: result.insertId });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
 
-// Actualizar estado y resultados
 const updateMatchStatus = async (req, res) => {
     try {
         const { id } = req.params;
@@ -50,10 +49,25 @@ const updateMatchStatus = async (req, res) => {
             [status, local_score || 0, visitor_score || 0, id]
         );
         
-        res.json({ message: 'Marcador y estado actualizados' });
+        res.json({ message: 'Resultado y estado actualizados correctamente' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
 
-module.exports = { getMatches, createMatch, updateMatchStatus };
+
+const deleteMatch = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const [result] = await pool.query('DELETE FROM matches WHERE id = ?', [id]);
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Partido no encontrado' });
+        }
+        
+        res.json({ message: 'Partido eliminado correctamente' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+module.exports = { getMatches, createMatch, updateMatchStatus, deleteMatch};
