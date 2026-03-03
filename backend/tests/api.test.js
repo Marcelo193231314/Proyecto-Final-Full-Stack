@@ -5,7 +5,7 @@ const pool = require('../src/config/db');
 let adminToken = '';
 let userToken = '';
 let createdMatchId = '';
-let teamIdToUpdate = 1; 
+let teamIdToUpdate = 1;
 
 beforeAll(async () => {
     
@@ -35,7 +35,6 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    
     await pool.end();
 });
 
@@ -101,7 +100,6 @@ describe('2. Pruebas de Gestión de Partidos (Matches)', () => {
         expect(res.statusCode).toEqual(201);
         expect(res.body).toHaveProperty('matchId');
         
-        
         createdMatchId = res.body.matchId;
     });
 
@@ -115,7 +113,7 @@ describe('2. Pruebas de Gestión de Partidos (Matches)', () => {
 
     it('Debe actualizar el marcador y estado de un partido', async () => {
         const res = await request(app)
-            .put(`/api/matches/${createdMatchId}`)
+            .patch(`/api/matches/${createdMatchId}/status`) 
             .set('Authorization', `Bearer ${adminToken}`)
             .send({ status: 'Finalizado', local_score: 3, visitor_score: 1 });
         expect(res.statusCode).toEqual(200);
@@ -150,7 +148,6 @@ describe('3. Pruebas de Gestión de Equipos (Teams)', () => {
     });
 
     it('Debe actualizar el nombre de un equipo', async () => {
-        
         const res = await request(app)
             .put(`/api/teams/${teamIdToUpdate}`)
             .set('Authorization', `Bearer ${adminToken}`)

@@ -1,14 +1,15 @@
 const express = require('express');
-// Asegúrate de que deleteMatch esté aquí adentro:
 const { getMatches, createMatch, updateMatchStatus, deleteMatch } = require('../controllers/matchesController');
+const { verifyToken, isAdmin } = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
-router.get('/', getMatches);
-router.post('/', createMatch);
-router.patch('/:id/status', updateMatchStatus);
 
-// Y aquí usamos la función
-router.delete('/:id', deleteMatch);
+router.get('/', verifyToken, getMatches);
+
+
+router.post('/', verifyToken, isAdmin, createMatch);
+router.patch('/:id/status', verifyToken, isAdmin, updateMatchStatus);
+router.delete('/:id', verifyToken, isAdmin, deleteMatch);
 
 module.exports = router;
