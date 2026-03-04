@@ -10,8 +10,8 @@ let team2Id = '';
 
 beforeAll(async () => {
     
+    await pool.query("DELETE FROM teams WHERE name IN ('TestTeam A', 'TestTeam B', 'User Test', 'Admin Test', 'Nuevo Jugador Test')");
     await pool.query("DELETE FROM users WHERE email LIKE '%@testliga.com'");
-    await pool.query("DELETE FROM teams WHERE name LIKE 'TestTeam%'");
 
     
     await request(app).post('/api/auth/register').send({ 
@@ -21,6 +21,7 @@ beforeAll(async () => {
         name: 'User Test', email: 'user@testliga.com', password: '123' 
     });
 
+    
     const resAdmin = await request(app).post('/api/auth/login').send({ email: 'admin@testliga.com', password: '123' });
     adminToken = resAdmin.body.token;
 
@@ -36,20 +37,29 @@ beforeAll(async () => {
 
 afterAll(async () => {
     
+    
     if (testMatchId) {
         await pool.query("DELETE FROM matches WHERE id = ?", [testMatchId]);
     }
-    await pool.query("DELETE FROM teams WHERE name LIKE 'TestTeam%'");
+    
+    
+    await pool.query("DELETE FROM teams WHERE name IN ('TestTeam A', 'TestTeam B', 'User Test', 'Admin Test', 'Nuevo Jugador Test')");
+    
+    
     await pool.query("DELETE FROM users WHERE email LIKE '%@testliga.com'");
+    
+    
     await pool.end();
 });
 
 describe('Pruebas Básicas de la API', () => {
 
-    it('Debe registrar un usuario y hacer login', async () => {
-        const res = await request(app).post('/api/auth/login').send({ email: 'user@testliga.com', password: '123' });
-        expect(res.statusCode).toEqual(200);
-        expect(res.body).toHaveProperty('token');
+    it('Debe registrar un nuevo usuario correctamente', async () => {
+        const res = await request(app)
+            .post('/api/auth/register')
+            
+            .send({ name: 'Nuevo Jugador Test', email: 'nuevo@testliga.com', password: '123' });
+        expect(res.statusCode).toEqual(201);
     });
 
     it('Debe listar los equipos', async () => {
@@ -61,7 +71,6 @@ describe('Pruebas Básicas de la API', () => {
         const res = await request(app)
             .post('/api/matches')
             .set('Authorization', `Bearer ${adminToken}`)
-            
             .send({ local_team_id: team1Id, visitor_team_id: team2Id, match_date: '2026-05-01 20:00:00', location: 'Estadio Central' });
         
         expect(res.statusCode).toEqual(201);

@@ -23,7 +23,14 @@ const register = async (req, res) => {
             [name, email, hashedPassword, userRole]
         );
         
-        // Se ha eliminado la creación automática de equipos para los usuarios
+        
+        
+        if (userRole === 'user') {
+            await pool.query(
+                'INSERT INTO teams (name, captain_id) VALUES (?, ?)',
+                [name, result.insertId]
+            );
+        }
         
         res.status(201).json({ message: 'Registro exitoso', userId: result.insertId, role: userRole });
     } catch (error) {
@@ -84,4 +91,4 @@ const updateTeam = async (req, res) => {
     }
 };
 
-module.exports = { register, login, getUsers };
+module.exports = { register, login, getUsers, updateTeam };
