@@ -49,17 +49,15 @@ import api from '../services/api';
 const router = useRouter();
 const users = ref([]);
 
-// Traer la lista de usuarios desde el backend
 const fetchUsers = async () => {
   try {
-    const res = await api.get('/auth/users'); // Asegúrate de tener esta ruta en el backend
+    const res = await api.get('/auth/users'); 
     users.value = res.data;
   } catch (error) {
     console.error("Error al cargar usuarios", error);
   }
 };
 
-// Función para dar de baja
 const deleteUser = async (id) => {
   const confirmar = confirm("¿Estás seguro de que deseas eliminar este usuario? Si es capitán de un equipo, podría haber errores.");
   
@@ -67,7 +65,7 @@ const deleteUser = async (id) => {
     try {
       await api.delete(`/auth/users/${id}`);
       alert("Usuario dado de baja exitosamente.");
-      fetchUsers(); // Recargamos la tabla automáticamente
+      fetchUsers();
     } catch (error) {
       alert("Error al eliminar. Revisa la consola.");
       console.error(error);

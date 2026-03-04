@@ -1,6 +1,6 @@
 const pool = require('../config/db');
 
-// Traer equipos
+
 const getTeams = async (req, res) => {
     try {
         const [teams] = await pool.query('SELECT id, name FROM teams ORDER BY name ASC');
@@ -10,7 +10,7 @@ const getTeams = async (req, res) => {
     }
 };
 
-// NUEVA FUNCIÓN: Solo actualizar el nombre
+
 const updateTeamName = async (req, res) => {
     try {
         const { id } = req.params;
@@ -24,5 +24,5 @@ const updateTeamName = async (req, res) => {
     }
 };
 
-// Exportamos ambas
+
 module.exports = { getTeams, updateTeamName };

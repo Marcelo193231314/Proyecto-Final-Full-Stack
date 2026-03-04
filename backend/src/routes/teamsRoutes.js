@@ -4,6 +4,6 @@ const { getTeams, updateTeamName } = require('../controllers/teamsController');
 const router = express.Router();
 
 router.get('/', getTeams);
-router.put('/:id', updateTeamName); // Ruta para guardar el nuevo nombre
+router.put('/:id', updateTeamName);
 
 module.exports = router;

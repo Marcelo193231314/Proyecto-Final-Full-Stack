@@ -35,3 +35,11 @@ ADD COLUMN visitor_score INT DEFAULT 0;
 
 
 ALTER TABLE matches MODIFY COLUMN status VARCHAR(50) DEFAULT 'Pendiente';
+
+
+UPDATE matches 
+SET status = 'Pendiente' 
+WHERE status NOT IN ('Pendiente', 'Finalizado');
+
+ALTER TABLE matches 
+MODIFY COLUMN status ENUM('Pendiente', 'Finalizado') DEFAULT 'Pendiente';

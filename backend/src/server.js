@@ -15,15 +15,24 @@ app.use('/api/auth', authRoutes);
 app.use('/api/matches', matchesRoutes);
 app.use('/api/teams', require('./routes/teamsRoutes')); 
 
-const PORT = process.env.PORT || 3000;
 
+
+
+
+app.use((err, req, res, next) => {
+    console.error("🚨 Error detectado:", err.stack);
+    res.status(500).json({
+        error: "Ocurrió un error interno en el servidor.",
+        message: err.message
+    });
+});
+
+const PORT = process.env.PORT || 3000;
 
 const startServer = async () => {
     try {
-        
         const connection = await db.getConnection();
         console.log(' Conexión a MySQL exitosa (Pool establecido)');
-        
         
         connection.release();
 
@@ -35,7 +44,6 @@ const startServer = async () => {
     } catch (err) {
         console.error(' Error crítico: No se pudo conectar a la base de datos.');
         console.error(`Detalle: ${err.message}`);
-        
         
         process.exit(1);
     }

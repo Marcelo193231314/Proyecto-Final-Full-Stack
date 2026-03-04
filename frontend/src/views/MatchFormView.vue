@@ -71,10 +71,8 @@ const createMatch = async () => {
   }
   
   try {
-    // ESTA ES LA MAGIA: Limpiamos la fecha para que MySQL la acepte sin chistar
     const formattedDate = match.value.match_date.replace('T', ' ') + ':00';
     
-    // Armamos el paquete de datos con la fecha ya corregida
     const matchData = {
       local_team_id: match.value.local_team_id,
       visitor_team_id: match.value.visitor_team_id,
@@ -82,7 +80,6 @@ const createMatch = async () => {
       location: match.value.location
     };
 
-    // Enviamos el paquete corregido al backend
     await api.post('/matches', matchData);
     
     alert("Partido creado con éxito");
