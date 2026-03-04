@@ -10,7 +10,6 @@ const register = async (req, res) => {
         let userRole = 'user';
         const SECRET_CODE = 'GOAT'; 
 
-        
         if (adminSecret !== undefined && adminSecret !== '') {
             if (adminSecret === SECRET_CODE) {
                 userRole = 'admin'; 
@@ -24,13 +23,7 @@ const register = async (req, res) => {
             [name, email, hashedPassword, userRole]
         );
         
-        
-        if (userRole === 'user') {
-            await pool.query(
-                'INSERT INTO teams (name, captain_id) VALUES (?, ?)',
-                [name, result.insertId]
-            );
-        }
+        // Se ha eliminado la creación automática de equipos para los usuarios
         
         res.status(201).json({ message: 'Registro exitoso', userId: result.insertId, role: userRole });
     } catch (error) {
@@ -79,7 +72,6 @@ const getUsers = async (req, res) => {
     }
 };
 
-
 const updateTeam = async (req, res) => {
     try {
         const { id } = req.params;
@@ -91,6 +83,5 @@ const updateTeam = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
-
 
 module.exports = { register, login, getUsers };
