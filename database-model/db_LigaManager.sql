@@ -23,23 +23,9 @@ CREATE TABLE matches (
     visitor_team_id INT,
     match_date DATETIME NOT NULL,
     location VARCHAR(100),
-    status ENUM('Programado', 'En Juego', 'Suspendido', 'Finalizado') DEFAULT 'Programado',
+    local_score INT DEFAULT 0,                                   
+    visitor_score INT DEFAULT 0,                                 
+    status ENUM('Pendiente', 'Finalizado') DEFAULT 'Pendiente',  
     FOREIGN KEY (local_team_id) REFERENCES teams(id),
     FOREIGN KEY (visitor_team_id) REFERENCES teams(id)
 );
-
-
-ALTER TABLE matches 
-ADD COLUMN local_score INT DEFAULT 0,
-ADD COLUMN visitor_score INT DEFAULT 0;
-
-
-ALTER TABLE matches MODIFY COLUMN status VARCHAR(50) DEFAULT 'Pendiente';
-
-
-UPDATE matches 
-SET status = 'Pendiente' 
-WHERE status NOT IN ('Pendiente', 'Finalizado');
-
-ALTER TABLE matches 
-MODIFY COLUMN status ENUM('Pendiente', 'Finalizado') DEFAULT 'Pendiente';
