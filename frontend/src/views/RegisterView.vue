@@ -3,52 +3,49 @@
     <div class="register-wrapper">
       <div class="glass-container register-container">
         <div class="register-header">
-          <div class="icon-container">
-            <span class="anim-ball text-4xl">⚽</span>
-          </div>
-          <h2>Nuevo Fichaje</h2>
-          <p>Regístrate para unirte a la liga</p>
+          <h2>Registro de Usuario</h2>
+          <p>Crea una cuenta para acceder a la plataforma</p>
         </div>
         
         <form @submit.prevent="handleRegister">
           
           <div class="form-group">
-            <label>🏷️ Nombre equipo o usuario(admin)</label>
-            <input type="text" v-model="name" class="form-control" placeholder="Ej. Real Madrid o Juan (Admin)" required />
+            <label>Usuario</label>
+            <input type="text" v-model="name" class="form-control" placeholder="Ingresa tu nombre" required />
           </div>
           
           <div class="form-group">
-            <label>📧 Correo Electrónico</label>
-            <input type="email" v-model="email" class="form-control" placeholder="dt@equipo.com" required />
+            <label>Correo Electrónico</label>
+            <input type="email" v-model="email" class="form-control" placeholder="usuario@correo.com" required />
           </div>
           
           <div class="form-group">
-            <label>🔒 Contraseña</label>
+            <label>Contraseña</label>
             <input type="password" v-model="password" class="form-control" placeholder="••••••••" required />
           </div>
           
           <div class="admin-toggle">
             <label class="toggle-label">
               <input type="checkbox" v-model="isAdminMode" class="checkbox-custom" />
-              <span>📋 Solicitar ser admin </span>
+              <span>Solicitar rol de administrador</span>
             </label>
           </div>
 
           <div v-if="isAdminMode" class="secret-code-input">
-            <label>🔑 Código Secreto de Autorización</label>
-            <input type="password" v-model="adminSecret" class="form-control admin-input" placeholder="Ingresa el código del VAR" required />
+            <label>Código de Autorización</label>
+            <input type="password" v-model="adminSecret" class="form-control admin-input" placeholder="Ingresa el código" required />
           </div>
 
           <div class="action-buttons">
-            <button type="submit" class="btn btn-primary">Firmar Contrato (Registrarme)</button>
+            <button type="submit" class="btn btn-primary">Registrarse</button>
           </div>
         </form>
         
-        <div v-if="error" class="message-box error-message">❌ {{ error }}</div>
-        <div v-if="successMsg" class="message-box success-message">✅ {{ successMsg }}</div>
+        <div v-if="error" class="message-box error-message">{{ error }}</div>
+        <div v-if="successMsg" class="message-box success-message">{{ successMsg }}</div>
         
         <p class="footer-text">
-          ¿Ya eres parte del club? <router-link to="/login">Entra a la cancha aquí</router-link>
+          ¿Ya tienes cuenta? <router-link to="/login">Inicia sesión aquí</router-link>
         </p>
       </div>
     </div>
@@ -77,12 +74,12 @@ const handleRegister = async () => {
     const secretToSend = isAdminMode.value ? adminSecret.value : '';
     await authStore.register(name.value, email.value, password.value, secretToSend);
     
-    successMsg.value = '¡Fichaje exitoso! Redirigiendo al panel de equipos...';
+    successMsg.value = 'Registro completado. Redirigiendo...';
     setTimeout(() => {
       router.push('/login');
     }, 1500);
   } catch (err) {
-    error.value = err.response?.data?.error || 'Error en el papeleo. Verifica tus datos.';
+    error.value = err.response?.data?.error || 'Error en el registro. Verifica tus datos.';
   }
 };
 </script>
@@ -93,7 +90,6 @@ const handleRegister = async () => {
 .glass-container { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.2); }
 .register-container { width: 100%; max-width: 450px; padding: 40px; border-radius: 16px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3); border-top: 6px solid #10b981; }
 .register-header { text-align: center; margin-bottom: 30px; }
-.icon-container { font-size: 40px; margin-bottom: 10px; }
 .register-header h2 { color: #064e3b; font-size: 28px; font-weight: 800; margin: 0 0 5px 0; text-transform: uppercase; }
 .register-header p { color: #475569; font-size: 15px; margin: 0; font-weight: 500; }
 

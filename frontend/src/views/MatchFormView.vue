@@ -3,19 +3,16 @@
     <div class="form-wrapper">
       <div class="glass-container form-container">
         <div class="form-header">
-          <div class="icon-container">
-            <span class="anim-ball text-4xl">⚽</span>
-          </div>
-          <h2>Programar Encuentro</h2>
-          <p>Configura los equipos, fecha y el estadio del partido</p>
+          <h2>Programar Partido</h2>
+          <p>Configura los detalles del encuentro</p>
         </div>
 
         <form @submit.prevent="createMatch" class="match-form">
           
           <div class="form-group">
-            <label>🏠 Equipo Local</label>
+            <label>Equipo Local</label>
             <select v-model="match.local_team_id" class="form-control" required>
-              <option value="" disabled>Selecciona al equipo de casa</option>
+              <option value="" disabled>Selecciona al equipo local</option>
               <option v-for="team in teams" :key="team.id" :value="team.id">
                 {{ team.name }}
               </option>
@@ -25,9 +22,9 @@
           <div class="vs-divider"><span>VS</span></div>
 
           <div class="form-group">
-            <label>✈️ Equipo Visitante</label>
+            <label>Equipo Visitante</label>
             <select v-model="match.visitor_team_id" class="form-control" required>
-              <option value="" disabled>Selecciona al equipo rival</option>
+              <option value="" disabled>Selecciona al equipo visitante</option>
               <option v-for="team in teams" :key="team.id" :value="team.id">
                 {{ team.name }}
               </option>
@@ -35,18 +32,18 @@
           </div>
 
           <div class="form-group">
-            <label>📅 Fecha y Hora del partido</label>
+            <label>Fecha y Hora</label>
             <input type="datetime-local" v-model="match.match_date" class="form-control" required>
           </div>
 
           <div class="form-group">
-            <label>🏟️ Estadio / Cancha</label>
-            <input type="text" v-model="match.location" class="form-control" placeholder="Ej. Estadio Monumental" required>
+            <label>Ubicación</label>
+            <input type="text" v-model="match.location" class="form-control" placeholder="Nombre del estadio o cancha" required>
           </div>
 
           <div class="action-buttons">
-            <button type="submit" class="btn btn-primary">✅ Confirmar Partido</button>
-            <button type="button" class="btn btn-secondary" @click="router.push('/')">⬅️ Volver a la Tabla</button>
+            <button type="submit" class="btn btn-primary">Guardar Partido</button>
+            <button type="button" class="btn btn-secondary" @click="router.push('/')">Volver</button>
           </div>
         </form>
       </div>
@@ -79,7 +76,7 @@ const fetchTeams = async () => {
 
 const createMatch = async () => {
   if (match.value.local_team_id === match.value.visitor_team_id) {
-    alert("Un equipo no puede jugar contra sí mismo 😅");
+    alert("Un equipo no puede jugar contra sí mismo.");
     return;
   }
   
@@ -95,10 +92,10 @@ const createMatch = async () => {
 
     await api.post('/matches', matchData);
     
-    alert("⚽ ¡Partido programado con éxito!");
+    alert("Partido programado con éxito.");
     router.push('/'); 
   } catch (error) {
-    alert("Error al crear el partido");
+    alert("Error al intentar crear el partido.");
     console.error(error);
   }
 };
@@ -112,7 +109,6 @@ onMounted(fetchTeams);
 .glass-container { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.2); }
 .form-container { width: 100%; max-width: 550px; padding: 40px; border-radius: 16px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3); border-top: 6px solid #10b981; }
 .form-header { text-align: center; margin-bottom: 30px; }
-.icon-container { font-size: 40px; margin-bottom: 10px; }
 .form-header h2 { color: #064e3b; font-size: 28px; font-weight: 800; margin: 0 0 5px 0; text-transform: uppercase; }
 .form-header p { color: #475569; font-size: 15px; margin: 0; font-weight: 500; }
 

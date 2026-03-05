@@ -3,8 +3,8 @@
     <div class="dashboard-container">
       <div class="dashboard-header">
         <div class="title-section">
-          <h1 class="text-white"><span class="anim-ball">⚽</span> Panel de Partidos</h1>
-          <p class="subtitle text-green-light">Gestiona y visualiza la jornada de la liga</p>
+          <h1 class="text-white">Panel de Partidos</h1>
+          <p class="subtitle text-green-light">Visualiza y administra los partidos registrados</p>
         </div>
         <button class="btn btn-danger" @click="logout">Cerrar Sesión</button>
       </div>
@@ -12,16 +12,16 @@
       <div class="toolbar" v-if="isAdmin">
         <div class="admin-actions">
           <button class="btn btn-primary" @click="router.push('/create-match')"> Programar Partido</button>
-          <button class="btn btn-secondary" @click="router.push('/teams')">🛡️ Ver Equipos</button>
+          <button class="btn btn-secondary" @click="router.push('/teams')">Ver Equipos</button>
         </div>
       </div>
 
       <div class="glass-card filter-card">
-        <label class="filter-label">Filtro de Jornada:</label>
+        <label class="filter-label">Estado:</label>
         <select v-model="filterStatus" @change="aplicarFiltro" class="form-select">
-          <option value="">🏆 Todos los encuentros</option>
-          <option value="Pendiente">⏱️ Por Jugar (Pendiente)</option>
-          <option value="Finalizado">🏁 Finalizado</option>
+          <option value="">Todos los partidos</option>
+          <option value="Pendiente">Pendiente</option>
+          <option value="Finalizado">Finalizado</option>
         </select>
       </div>
 
@@ -29,13 +29,13 @@
         <table class="modern-table">
           <thead>
             <tr>
-              <th>Juego</th>
+              <th>ID</th>
               <th>Local</th>
               <th>Marcador</th>
               <th>Visitante</th>
               <th>Fecha</th>
               <th>Estado</th>
-              <th v-if="isAdmin">VAR / Árbitro</th>
+              <th v-if="isAdmin">Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -63,14 +63,14 @@
                   <option value="Finalizado">Finalizado</option>
                 </select>
                 <span v-else class="status-badge" :class="{'badge-pending': match.status === 'Pendiente', 'badge-finished': match.status === 'Finalizado'}">
-                  {{ match.status === 'Pendiente' ? '⏱️ Pendiente' : '🏁 Finalizado' }}
+                  {{ match.status }}
                 </span>
               </td>
 
               <td v-if="isAdmin" class="actions-cell">
-                <button @click="saveChanges(match)" class="action-btn btn-save" title="Pitar Final / Guardar">💾</button>
-                <button @click="simulate(match)" class="action-btn btn-sim" title="Simular Partido">🎲</button>
-                <button @click="borrarPartido(match.id)" class="action-btn btn-delete" title="Anular Partido">❌</button>
+                <button @click="saveChanges(match)" class="action-btn btn-save" title="Guardar cambios">💾</button>
+                <button @click="simulate(match)" class="action-btn btn-sim" title="Simular resultado">🎲</button>
+                <button @click="borrarPartido(match.id)" class="action-btn btn-delete" title="Eliminar partido">❌</button>
               </td>
             </tr>
           </tbody>
@@ -79,7 +79,7 @@
 
       <div class="pagination-container glass-card">
         <button :disabled="currentPage === 1" @click="cambiarPagina(currentPage - 1)" class="btn-page">⬅ Anterior</button>
-        <span class="page-indicator text-white">Jornada {{ currentPage }} de {{ totalPages || 1 }}</span>
+        <span class="page-indicator text-white">Página {{ currentPage }} de {{ totalPages || 1 }}</span>
         <button :disabled="currentPage === totalPages || totalPages === 0" @click="cambiarPagina(currentPage + 1)" class="btn-page">Siguiente ➡</button>
       </div>
     </div>
@@ -116,8 +116,8 @@ const cambiarPagina = (nuevaPagina) => { currentPage.value = nuevaPagina; fetchM
 const saveChanges = async (match) => {
   try {
     await api.patch(`/matches/${match.id}/status`, { status: match.status, local_score: match.local_score, visitor_score: match.visitor_score });
-    alert("⚽ ¡Marcador actualizado con éxito!");
-  } catch (e) { alert("Error al actualizar"); }
+    alert("Marcador actualizado con éxito.");
+  } catch (e) { alert("Error al actualizar la información."); }
 };
 
 const simulate = (match) => {
@@ -128,11 +128,11 @@ const simulate = (match) => {
 };
 
 const borrarPartido = async (id) => {
-  if (confirm("¿Seguro que quieres anular este encuentro?")) {
+  if (confirm("¿Estás seguro de que deseas eliminar este registro?")) {
     try {
       await api.delete(`/matches/${id}`);
       fetchMatches();
-    } catch (error) { alert("Error al anular partido"); }
+    } catch (error) { alert("Error al eliminar el partido."); }
   }
 };
 

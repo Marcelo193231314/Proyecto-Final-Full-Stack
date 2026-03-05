@@ -7,13 +7,13 @@
             <span class="anim-ball text-4xl">⚽</span>
           </div>
           <h2>Liga Manager</h2>
-          <p>Ingresa a tu cuenta para ver tus encuentros</p>
+          <p>Ingresa a tu cuenta para continuar</p>
         </div>
 
         <form @submit.prevent>
           <div class="form-group">
             <label>Correo Electrónico</label>
-            <input type="email" v-model="email" class="form-control" placeholder="dt@equipo.com" required />
+            <input type="email" v-model="email" class="form-control" placeholder="usuario@correo.com" required />
           </div>
           
           <div class="form-group">
@@ -23,20 +23,20 @@
           
           <div class="action-buttons">
             <button type="button" class="btn btn-user" @click="handleLogin('user')">
-              Entrar a la Cancha
+              Iniciar Sesión
             </button>
             <button type="button" class="btn btn-admin" @click="handleLogin('admin')">
-              Acceso de Administrador
+              Entrar como Administrador
             </button>
           </div>
         </form>
         
         <div v-if="error" class="error-message">
-          📋 {{ error }}
+          {{ error }}
         </div>
         
         <p class="footer-text">
-          ¿Fichaje nuevo? <router-link to="/register">Regístrate aquí</router-link>
+          ¿No tienes una cuenta? <router-link to="/register">Regístrate aquí</router-link>
         </p>
       </div>
     </div>
@@ -56,7 +56,7 @@ const router = useRouter();
 
 const handleLogin = async (role) => {
   if (!email.value || !password.value) {
-    error.value = 'Falta información en la alineación.';
+    error.value = 'Por favor, completa todos los campos.';
     return;
   }
   try {

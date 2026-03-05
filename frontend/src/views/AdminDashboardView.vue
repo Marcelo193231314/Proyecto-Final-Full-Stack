@@ -3,21 +3,21 @@
     <div class="dashboard-container">
       <div class="dashboard-header">
         <div>
-          <h2 class="text-white"><span class="anim-ball">⚽</span> Panel de Arbitraje</h2>
-          <p class="subtitle text-green-light">Administra los usuarios y directores técnicos de la plataforma</p>
+          <h2 class="text-white"><span class="anim-ball">⚙️</span> Panel de Administración</h2>
+          <p class="subtitle text-green-light">Gestiona los usuarios y roles de la plataforma</p>
         </div>
-        <button class="btn btn-secondary" @click="router.push('/')">⬅ Volver a la Tabla</button>
+        <button class="btn btn-secondary" @click="router.push('/')">⬅ Volver</button>
       </div>
 
       <div class="glass-card table-card">
         <table class="modern-table">
           <thead>
             <tr>
-              <th>Gafete ID</th>
-              <th>Nombre del Registro</th>
+              <th>ID</th>
+              <th>Nombre</th>
               <th>Email</th>
-              <th>Rol / Posición</th>
-              <th>VAR (Acciones)</th>
+              <th>Rol</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -26,16 +26,16 @@
               <td><strong class="user-name">{{ user.name }}</strong></td>
               <td class="user-email">{{ user.email }}</td>
               <td>
-                <span class="role-badge" :class="user.role">{{ user.role === 'admin' ? 'Árbitro (Admin)' : 'DT (User)' }}</span>
+                <span class="role-badge" :class="user.role">{{ user.role === 'admin' ? 'Administrador' : 'Usuario' }}</span>
               </td>
               <td>
                 <button 
                   v-if="user.role === 'user'" 
                   @click="deleteUser(user.id)" 
                   class="btn-danger-outline" 
-                  title="Expulsar de la liga"
+                  title="Eliminar usuario"
                 >
-                  🟥 Expulsar
+                  Eliminar
                 </button>
               </td>
             </tr>
@@ -64,15 +64,15 @@ const fetchUsers = async () => {
 };
 
 const deleteUser = async (id) => {
-  const confirmar = confirm("🚨 ¿Estás seguro de que deseas sacar tarjeta roja a este usuario? Será expulsado de la liga.");
+  const confirmar = confirm("¿Estás seguro de que deseas eliminar a este usuario de la plataforma?");
   
   if (confirmar) {
     try {
       await api.delete(`/auth/users/${id}`);
-      alert("✅ Usuario expulsado exitosamente.");
+      alert("Usuario eliminado exitosamente.");
       fetchUsers();
     } catch (error) {
-      alert("Error en el VAR. Revisa la consola.");
+      alert("Error al intentar eliminar el usuario.");
       console.error(error);
     }
   }

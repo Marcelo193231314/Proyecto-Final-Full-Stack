@@ -3,30 +3,30 @@
     <div class="dashboard-container">
       <div class="dashboard-header">
         <div>
-          <h2 class="text-white"><span class="anim-ball">⚽</span> Catálogo de Clubes</h2>
-          <p class="subtitle text-green-light">Modifica los nombres oficiales de los equipos inscritos</p>
+          <h2 class="text-white">Catálogo de Equipos</h2>
+          <p class="subtitle text-green-light">Gestiona los equipos registrados en el sistema</p>
         </div>
-        <button class="btn btn-secondary" @click="router.push('/')">⬅ Volver </button>
+        <button class="btn btn-secondary" @click="router.push('/')">⬅ Volver</button>
       </div>
 
       <div class="glass-card table-card">
         <table class="modern-table">
           <thead>
             <tr>
-              <th style="width: 15%">Escudo (ID)</th>
-              <th style="width: 65%">Nombre Oficial del Club</th>
-              <th style="width: 20%">Gestión</th>
+              <th style="width: 15%">ID</th>
+              <th style="width: 65%">Nombre del Equipo</th>
+              <th style="width: 20%">Acciones</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="team in teams" :key="team.id">
               <td class="text-muted">#{{ team.id }}</td>
               <td>
-                <input type="text" v-model="team.name" class="form-control name-input" placeholder="Nombre del equipo">
+                <input type="text" v-model="team.name" class="form-control name-input" placeholder="Ingresa el nombre">
               </td>
               <td>
-                <button @click="actualizarNombre(team)" class="action-btn btn-save" title="Guardar Nuevo Nombre">
-                  💾 Registrar
+                <button @click="actualizarNombre(team)" class="action-btn btn-save" title="Guardar Cambios">
+                  💾 Guardar
                 </button>
               </td>
             </tr>
@@ -56,15 +56,15 @@ const fetchTeams = async () => {
 
 const actualizarNombre = async (team) => {
   if (!team.name || team.name.trim() === '') {
-    alert("El nombre del club no puede estar vacío ");
+    alert("El nombre no puede estar vacío.");
     return;
   }
 
   try {
     await api.put(`/teams/${team.id}`, { name: team.name });
-    alert(" ¡Nombre del club registrado en la federación!");
+    alert("Información actualizada correctamente.");
   } catch (error) {
-    alert("Error al actualizar el nombre del equipo");
+    alert("Error al intentar actualizar la información.");
     console.error(error);
   }
 };
