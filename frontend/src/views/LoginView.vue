@@ -25,7 +25,7 @@
             Entrar a la Cancha
           </button>
           <button type="button" class="btn btn-admin" @click="handleLogin('admin')">
-            Acceso Arbitraje (Admin)
+            Acceso de Administrador
           </button>
         </div>
       </form>
