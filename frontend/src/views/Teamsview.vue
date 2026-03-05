@@ -1,27 +1,32 @@
 <template>
-  <div class="container">
-    <div class="header">
-      <h2>Gestión de Equipos</h2>
-      <button class="btn-secondary" @click="router.push('/')">Volver a Partidos</button>
+  <div class="dashboard-container">
+    <div class="dashboard-header">
+      <div>
+        <h2 class="text-white"><span class="anim-ball">⚽</span> Catálogo de Clubes</h2>
+        <p class="subtitle text-green-light">Modifica los nombres oficiales de los equipos inscritos</p>
+      </div>
+      <button class="btn btn-secondary" @click="router.push('/')">⬅ Volver al Torneo</button>
     </div>
 
-    <div class="table-wrapper">
-      <table>
+    <div class="table-card">
+      <table class="modern-table">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Nombre del Equipo</th>
-            <th>Acciones</th>
+            <th style="width: 15%">Escudo (ID)</th>
+            <th style="width: 65%">Nombre Oficial del Club</th>
+            <th style="width: 20%">Gestión</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="team in teams" :key="team.id">
-            <td>{{ team.id }}</td>
+            <td class="text-muted">#{{ team.id }}</td>
             <td>
-              <input type="text" v-model="team.name" class="name-input">
+              <input type="text" v-model="team.name" class="form-control name-input" placeholder="Nombre del equipo">
             </td>
             <td>
-              <button @click="actualizarNombre(team)" class="btn-save" title="Guardar Nuevo Nombre">💾</button>
+              <button @click="actualizarNombre(team)" class="action-btn btn-save" title="Guardar Nuevo Nombre">
+                Registrar 💾
+              </button>
             </td>
           </tr>
         </tbody>
@@ -38,7 +43,6 @@ import api from '../services/api';
 const router = useRouter();
 const teams = ref([]);
 
-// Cargar los equipos
 const fetchTeams = async () => {
   try {
     const res = await api.get('/teams');
@@ -48,16 +52,15 @@ const fetchTeams = async () => {
   }
 };
 
-// Función para guardar el nombre modificado
 const actualizarNombre = async (team) => {
   if (!team.name || team.name.trim() === '') {
-    alert("El nombre del equipo no puede estar vacío");
+    alert("El nombre del club no puede estar vacío ❌");
     return;
   }
 
   try {
     await api.put(`/teams/${team.id}`, { name: team.name });
-    alert("¡Nombre actualizado correctamente!");
+    alert("✅ ¡Nombre del club registrado en la federación!");
   } catch (error) {
     alert("Error al actualizar el nombre del equipo");
     console.error(error);
@@ -68,14 +71,28 @@ onMounted(fetchTeams);
 </script>
 
 <style scoped>
-.container { max-width: 800px; margin: 40px auto; font-family: sans-serif; }
-.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.table-wrapper { background: white; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); overflow: hidden; }
-table { width: 100%; border-collapse: collapse; text-align: center; }
-th, td { padding: 15px; border-bottom: 1px solid #eee; }
-.name-input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 80%; text-align: center; font-size: 1rem; font-weight: bold; }
-.btn-save { background: none; border: none; cursor: pointer; font-size: 1.5rem; transition: transform 0.2s; }
-.btn-save:hover { transform: scale(1.1); }
-.btn-secondary { background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-.btn-secondary:hover { background: #5a6268; }
+.dashboard-container { max-width: 800px; margin: 40px auto; padding: 0 20px; font-family: 'Inter', sans-serif; }
+.dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+.text-white { color: #ffffff !important; }
+.text-green-light { color: #a7f3d0 !important; }
+.dashboard-header h2 { margin: 0; font-size: 32px; font-weight: 800; text-transform: uppercase; }
+.subtitle { margin: 5px 0 0 0; font-size: 16px; font-weight: 500; }
+
+.btn { padding: 12px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: all 0.2s; font-size: 14px; text-transform: uppercase; }
+.btn-secondary { background: #ffffff; color: #064e3b; border: 2px solid #10b981; }
+.btn-secondary:hover { background: #f0fdf4; transform: translateY(-2px); }
+
+.table-card { background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); overflow: hidden; border: 1px solid #e2e8f0; }
+.modern-table { width: 100%; border-collapse: collapse; text-align: center; }
+.modern-table th { background-color: #064e3b; padding: 18px; font-size: 13px; font-weight: 800; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; }
+.modern-table td { padding: 16px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+.modern-table tr:hover { background-color: #f8fafc; }
+
+.text-muted { color: #64748b; font-size: 15px; font-weight: 800; }
+
+.form-control.name-input { width: 90%; padding: 12px 15px; background-color: #f8fafc; border: 2px solid #cbd5e1; border-radius: 10px; font-size: 16px; color: #0f172a; text-align: center; font-weight: 800; text-transform: uppercase; transition: all 0.3s; }
+.form-control.name-input:focus { background-color: #ffffff; border-color: #10b981; outline: none; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15); }
+
+.action-btn { background: #ecfdf5; color: #059669; border: 2px solid #34d399; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 800; text-transform: uppercase; transition: all 0.2s; }
+.action-btn:hover { background: #d1fae5; border-color: #10b981; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2); }
 </style>

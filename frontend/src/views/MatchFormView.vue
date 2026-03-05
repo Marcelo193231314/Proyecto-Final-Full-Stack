@@ -1,43 +1,54 @@
 <template>
-  <div class="container">
-    <h2>Crear Nuevo Partido</h2>
-    <form @submit.prevent="createMatch" class="form-card">
-      
-      <div class="form-group">
-        <label>Equipo Local:</label>
-        <select v-model="match.local_team_id" required>
-          <option value="" disabled>Selecciona un equipo</option>
-          <option v-for="team in teams" :key="team.id" :value="team.id">
-            {{ team.name }}
-          </option>
-        </select>
+  <div class="form-wrapper">
+    <div class="form-container">
+      <div class="form-header">
+        <div class="icon-container">
+          <span class="anim-ball text-4xl">⚽</span>
+        </div>
+        <h2>Programar Encuentro</h2>
+        <p>Configura los equipos, fecha y el estadio del partido</p>
       </div>
 
-      <div class="form-group">
-        <label>Equipo Visitante:</label>
-        <select v-model="match.visitor_team_id" required>
-          <option value="" disabled>Selecciona un equipo</option>
-          <option v-for="team in teams" :key="team.id" :value="team.id">
-            {{ team.name }}
-          </option>
-        </select>
-      </div>
+      <form @submit.prevent="createMatch" class="match-form">
+        
+        <div class="form-group">
+          <label>🏠 Equipo Local</label>
+          <select v-model="match.local_team_id" class="form-control" required>
+            <option value="" disabled>Selecciona al equipo de casa</option>
+            <option v-for="team in teams" :key="team.id" :value="team.id">
+              {{ team.name }}
+            </option>
+          </select>
+        </div>
 
-      <div class="form-group">
-        <label>Fecha y Hora:</label>
-        <input type="datetime-local" v-model="match.match_date" required>
-      </div>
+        <div class="vs-divider"><span>VS</span></div>
 
-      <div class="form-group">
-        <label>Cancha (Ubicación):</label>
-        <input type="text" v-model="match.location" placeholder="Ej. Cancha 1" required>
-      </div>
+        <div class="form-group">
+          <label>✈️ Equipo Visitante</label>
+          <select v-model="match.visitor_team_id" class="form-control" required>
+            <option value="" disabled>Selecciona al equipo rival</option>
+            <option v-for="team in teams" :key="team.id" :value="team.id">
+              {{ team.name }}
+            </option>
+          </select>
+        </div>
 
-      <div class="buttons">
-        <button type="submit" class="btn-primary">Guardar Partido</button>
-        <button type="button" class="btn-secondary" @click="router.push('/')">Cancelar</button>
-      </div>
-    </form>
+        <div class="form-group">
+          <label>📅 Fecha y Hora del Silbatazo</label>
+          <input type="datetime-local" v-model="match.match_date" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+          <label>🏟️ Estadio / Cancha</label>
+          <input type="text" v-model="match.location" class="form-control" placeholder="Ej. Estadio Monumental" required>
+        </div>
+
+        <div class="action-buttons">
+          <button type="submit" class="btn btn-primary">✅ Confirmar Partido</button>
+          <button type="button" class="btn btn-secondary" @click="router.push('/')">⬅️ Volver a la Tabla</button>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -57,7 +68,7 @@ const match = ref({
 
 const fetchTeams = async () => {
   try {
-    const res = await api.get('/teams'); // Ruta correcta para traer los equipos
+    const res = await api.get('/teams'); 
     teams.value = res.data;
   } catch (error) {
     console.error("Error al cargar los equipos", error);
@@ -66,7 +77,7 @@ const fetchTeams = async () => {
 
 const createMatch = async () => {
   if (match.value.local_team_id === match.value.visitor_team_id) {
-    alert("Un equipo no puede jugar contra sí mismo");
+    alert("Un equipo no puede jugar contra sí mismo 😅");
     return;
   }
   
@@ -82,8 +93,8 @@ const createMatch = async () => {
 
     await api.post('/matches', matchData);
     
-    alert("Partido creado con éxito");
-    router.push('/'); // Regresamos a la tabla
+    alert("⚽ ¡Partido programado con éxito!");
+    router.push('/'); 
   } catch (error) {
     alert("Error al crear el partido");
     console.error(error);
@@ -94,12 +105,26 @@ onMounted(fetchTeams);
 </script>
 
 <style scoped>
-.container { max-width: 600px; margin: 40px auto; font-family: sans-serif; }
-.form-card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-.form-group { margin-bottom: 20px; display: flex; flex-direction: column; }
-label { margin-bottom: 5px; font-weight: bold; }
-select, input { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
-.buttons { display: flex; justify-content: space-between; margin-top: 20px; }
-.btn-primary { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
-.btn-secondary { background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+.form-wrapper { display: flex; justify-content: center; padding: 40px 20px; }
+.form-container { width: 100%; max-width: 550px; background: #ffffff; padding: 40px; border-radius: 16px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3); border-top: 6px solid #10b981; }
+.form-header { text-align: center; margin-bottom: 30px; }
+.icon-container { font-size: 40px; margin-bottom: 10px; }
+.form-header h2 { color: #064e3b; font-size: 28px; font-weight: 800; margin: 0 0 5px 0; text-transform: uppercase; }
+.form-header p { color: #64748b; font-size: 15px; margin: 0; font-weight: 500; }
+
+.form-group { margin-bottom: 20px; }
+label { display: block; margin-bottom: 8px; color: #334155; font-size: 14px; font-weight: 700; text-transform: uppercase; }
+.form-control { width: 100%; padding: 14px 16px; background-color: #f8fafc; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 15px; transition: all 0.3s ease; font-weight: 600; color: #0f172a;}
+.form-control:focus { background-color: #ffffff; border-color: #10b981; outline: none; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15); }
+
+.vs-divider { text-align: center; margin: 15px 0; position: relative; z-index: 1; }
+.vs-divider::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; border-top: 2px dashed #cbd5e1; z-index: -1; }
+.vs-divider span { background: white; padding: 5px 15px; color: #0f172a; font-weight: 900; font-size: 16px; border-radius: 20px; border: 2px solid #cbd5e1; }
+
+.action-buttons { display: flex; flex-direction: column; gap: 15px; margin-top: 35px; }
+.btn { width: 100%; padding: 14px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 0.5px; }
+.btn-primary { background-color: #10b981; color: #ffffff; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
+.btn-primary:hover { background-color: #059669; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(16, 185, 129, 0.4); }
+.btn-secondary { background-color: #f1f5f9; color: #475569; border: 2px solid #cbd5e1; }
+.btn-secondary:hover { background-color: #e2e8f0; color: #0f172a; }
 </style>
