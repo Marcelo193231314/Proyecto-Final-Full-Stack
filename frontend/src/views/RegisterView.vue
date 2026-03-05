@@ -1,54 +1,56 @@
 <template>
-  <div class="register-wrapper">
-    <div class="register-container">
-      <div class="register-header">
-        <div class="icon-container">
-          <span class="anim-ball text-4xl">⚽</span>
+  <div class="stadium-bg">
+    <div class="register-wrapper">
+      <div class="glass-container register-container">
+        <div class="register-header">
+          <div class="icon-container">
+            <span class="anim-ball text-4xl">⚽</span>
+          </div>
+          <h2>Nuevo Fichaje</h2>
+          <p>Regístrate para unirte a la liga</p>
         </div>
-        <h2>Nuevo Fichaje</h2>
-        <p>Regístrate para unirte a la liga</p>
+        
+        <form @submit.prevent="handleRegister">
+          
+          <div class="form-group">
+            <label>🏷️ Nombre equipo o usuario(admin)</label>
+            <input type="text" v-model="name" class="form-control" placeholder="Ej. Real Madrid o Juan (Admin)" required />
+          </div>
+          
+          <div class="form-group">
+            <label>📧 Correo Electrónico</label>
+            <input type="email" v-model="email" class="form-control" placeholder="dt@equipo.com" required />
+          </div>
+          
+          <div class="form-group">
+            <label>🔒 Contraseña</label>
+            <input type="password" v-model="password" class="form-control" placeholder="••••••••" required />
+          </div>
+          
+          <div class="admin-toggle">
+            <label class="toggle-label">
+              <input type="checkbox" v-model="isAdminMode" class="checkbox-custom" />
+              <span>📋 Solicitar ser admin </span>
+            </label>
+          </div>
+
+          <div v-if="isAdminMode" class="secret-code-input">
+            <label>🔑 Código Secreto de Autorización</label>
+            <input type="password" v-model="adminSecret" class="form-control admin-input" placeholder="Ingresa el código del VAR" required />
+          </div>
+
+          <div class="action-buttons">
+            <button type="submit" class="btn btn-primary">Firmar Contrato (Registrarme)</button>
+          </div>
+        </form>
+        
+        <div v-if="error" class="message-box error-message">❌ {{ error }}</div>
+        <div v-if="successMsg" class="message-box success-message">✅ {{ successMsg }}</div>
+        
+        <p class="footer-text">
+          ¿Ya eres parte del club? <router-link to="/login">Entra a la cancha aquí</router-link>
+        </p>
       </div>
-      
-      <form @submit.prevent="handleRegister">
-        
-        <div class="form-group">
-          <label>🏷️ Nombre equipo o usuario(admin)</label>
-          <input type="text" v-model="name" class="form-control" placeholder="Ej. Real Madrid o Juan (Admin)" required />
-        </div>
-        
-        <div class="form-group">
-          <label>📧 Correo Electrónico</label>
-          <input type="email" v-model="email" class="form-control" placeholder="dt@equipo.com" required />
-        </div>
-        
-        <div class="form-group">
-          <label>🔒 Contraseña</label>
-          <input type="password" v-model="password" class="form-control" placeholder="••••••••" required />
-        </div>
-        
-        <div class="admin-toggle">
-          <label class="toggle-label">
-            <input type="checkbox" v-model="isAdminMode" class="checkbox-custom" />
-            <span>📋 Solicitar ser admin </span>
-          </label>
-        </div>
-
-        <div v-if="isAdminMode" class="secret-code-input">
-          <label>🔑 Código Secreto de Autorización</label>
-          <input type="password" v-model="adminSecret" class="form-control admin-input" placeholder="Ingresa el código del VAR" required />
-        </div>
-
-        <div class="action-buttons">
-          <button type="submit" class="btn btn-primary">Firmar Contrato (Registrarme)</button>
-        </div>
-      </form>
-      
-      <div v-if="error" class="message-box error-message">❌ {{ error }}</div>
-      <div v-if="successMsg" class="message-box success-message">✅ {{ successMsg }}</div>
-      
-      <p class="footer-text">
-        ¿Ya eres parte del club? <router-link to="/login">Entra a la cancha aquí</router-link>
-      </p>
     </div>
   </div>
 </template>
@@ -75,7 +77,7 @@ const handleRegister = async () => {
     const secretToSend = isAdminMode.value ? adminSecret.value : '';
     await authStore.register(name.value, email.value, password.value, secretToSend);
     
-    successMsg.value = '¡Fichaje exitoso! Redirigiendo a los vestidores...';
+    successMsg.value = '¡Fichaje exitoso! Redirigiendo al panel de equipos...';
     setTimeout(() => {
       router.push('/login');
     }, 1500);
@@ -86,12 +88,14 @@ const handleRegister = async () => {
 </script>
 
 <style scoped>
-.register-wrapper { display: flex; justify-content: center; align-items: center; min-height: 85vh; padding: 20px; }
-.register-container { width: 100%; max-width: 450px; background: #ffffff; padding: 40px; border-radius: 16px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3); border-top: 6px solid #10b981; }
+.stadium-bg { min-height: 100vh; background-image: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.85)), url('https://images.unsplash.com/photo-1518605368461-1ee125232938?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80'); background-size: cover; background-position: center; background-attachment: fixed; }
+.register-wrapper { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+.glass-container { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.2); }
+.register-container { width: 100%; max-width: 450px; padding: 40px; border-radius: 16px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3); border-top: 6px solid #10b981; }
 .register-header { text-align: center; margin-bottom: 30px; }
 .icon-container { font-size: 40px; margin-bottom: 10px; }
 .register-header h2 { color: #064e3b; font-size: 28px; font-weight: 800; margin: 0 0 5px 0; text-transform: uppercase; }
-.register-header p { color: #64748b; font-size: 15px; margin: 0; font-weight: 500; }
+.register-header p { color: #475569; font-size: 15px; margin: 0; font-weight: 500; }
 
 .form-group { margin-bottom: 20px; }
 label { display: block; margin-bottom: 8px; color: #334155; font-size: 14px; font-weight: 700; text-transform: uppercase; }
@@ -112,10 +116,10 @@ label { display: block; margin-bottom: 8px; color: #334155; font-size: 14px; fon
 .btn-primary:hover { background-color: #059669; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(16, 185, 129, 0.4); }
 
 .message-box { padding: 12px; border-radius: 8px; text-align: center; margin-top: 20px; font-size: 14px; font-weight: 700; }
-.error-message { background-color: #fef2f2; color: #ef4444; border: 2px solid #fca5a5; }
-.success-message { background-color: #ecfdf5; color: #10b981; border: 2px solid #6ee7b7; }
+.error-message { background-color: rgba(254, 242, 242, 0.9); color: #ef4444; border: 2px solid #fca5a5; }
+.success-message { background-color: rgba(236, 253, 245, 0.9); color: #10b981; border: 2px solid #6ee7b7; }
 
-.footer-text { text-align: center; margin-top: 25px; color: #64748b; font-size: 14px; font-weight: 500;}
+.footer-text { text-align: center; margin-top: 25px; color: #475569; font-size: 14px; font-weight: 500;}
 .footer-text a { color: #10b981; text-decoration: none; font-weight: 700; }
 .footer-text a:hover { color: #059669; text-decoration: underline; }
 </style>

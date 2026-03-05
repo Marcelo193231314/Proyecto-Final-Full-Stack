@@ -1,36 +1,38 @@
 <template>
-  <div class="dashboard-container">
-    <div class="dashboard-header">
-      <div>
-        <h2 class="text-white"><span class="anim-ball">⚽</span> Catálogo de Clubes</h2>
-        <p class="subtitle text-green-light">Modifica los nombres oficiales de los equipos inscritos</p>
+  <div class="stadium-bg">
+    <div class="dashboard-container">
+      <div class="dashboard-header">
+        <div>
+          <h2 class="text-white"><span class="anim-ball">⚽</span> Catálogo de Clubes</h2>
+          <p class="subtitle text-green-light">Modifica los nombres oficiales de los equipos inscritos</p>
+        </div>
+        <button class="btn btn-secondary" @click="router.push('/')">⬅ Volver </button>
       </div>
-      <button class="btn btn-secondary" @click="router.push('/')">⬅ Volver al Torneo</button>
-    </div>
 
-    <div class="table-card">
-      <table class="modern-table">
-        <thead>
-          <tr>
-            <th style="width: 15%">Escudo (ID)</th>
-            <th style="width: 65%">Nombre Oficial del Club</th>
-            <th style="width: 20%">Gestión</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="team in teams" :key="team.id">
-            <td class="text-muted">#{{ team.id }}</td>
-            <td>
-              <input type="text" v-model="team.name" class="form-control name-input" placeholder="Nombre del equipo">
-            </td>
-            <td>
-              <button @click="actualizarNombre(team)" class="action-btn btn-save" title="Guardar Nuevo Nombre">
-                Registrar 💾
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="glass-card table-card">
+        <table class="modern-table">
+          <thead>
+            <tr>
+              <th style="width: 15%">Escudo (ID)</th>
+              <th style="width: 65%">Nombre Oficial del Club</th>
+              <th style="width: 20%">Gestión</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="team in teams" :key="team.id">
+              <td class="text-muted">#{{ team.id }}</td>
+              <td>
+                <input type="text" v-model="team.name" class="form-control name-input" placeholder="Nombre del equipo">
+              </td>
+              <td>
+                <button @click="actualizarNombre(team)" class="action-btn btn-save" title="Guardar Nuevo Nombre">
+                  💾 Registrar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>
@@ -54,13 +56,13 @@ const fetchTeams = async () => {
 
 const actualizarNombre = async (team) => {
   if (!team.name || team.name.trim() === '') {
-    alert("El nombre del club no puede estar vacío ❌");
+    alert("El nombre del club no puede estar vacío ");
     return;
   }
 
   try {
     await api.put(`/teams/${team.id}`, { name: team.name });
-    alert("✅ ¡Nombre del club registrado en la federación!");
+    alert(" ¡Nombre del club registrado en la federación!");
   } catch (error) {
     alert("Error al actualizar el nombre del equipo");
     console.error(error);
@@ -71,22 +73,25 @@ onMounted(fetchTeams);
 </script>
 
 <style scoped>
-.dashboard-container { max-width: 800px; margin: 40px auto; padding: 0 20px; font-family: 'Inter', sans-serif; }
+.stadium-bg { min-height: 100vh; background-image: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.85)), url('https://images.unsplash.com/photo-1518605368461-1ee125232938?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80'); background-size: cover; background-position: center; background-attachment: fixed; padding: 40px 0; }
+.dashboard-container { max-width: 800px; margin: 0 auto; padding: 0 20px; font-family: 'Inter', sans-serif; }
 .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
 .text-white { color: #ffffff !important; }
 .text-green-light { color: #a7f3d0 !important; }
 .dashboard-header h2 { margin: 0; font-size: 32px; font-weight: 800; text-transform: uppercase; }
 .subtitle { margin: 5px 0 0 0; font-size: 16px; font-weight: 500; }
 
-.btn { padding: 12px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: all 0.2s; font-size: 14px; text-transform: uppercase; }
-.btn-secondary { background: #ffffff; color: #064e3b; border: 2px solid #10b981; }
-.btn-secondary:hover { background: #f0fdf4; transform: translateY(-2px); }
+.glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid rgba(255, 255, 255, 0.2); }
 
-.table-card { background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); overflow: hidden; border: 1px solid #e2e8f0; }
+.btn { padding: 12px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: all 0.2s; font-size: 14px; text-transform: uppercase; border: none; }
+.btn-secondary { background: rgba(255,255,255,0.9); color: #064e3b; border: 2px solid #10b981; }
+.btn-secondary:hover { background: #ffffff; transform: translateY(-2px); }
+
+.table-card { overflow: hidden; }
 .modern-table { width: 100%; border-collapse: collapse; text-align: center; }
-.modern-table th { background-color: #064e3b; padding: 18px; font-size: 13px; font-weight: 800; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; }
+.modern-table th { background-color: rgba(6, 78, 59, 0.95); padding: 18px; font-size: 13px; font-weight: 800; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; }
 .modern-table td { padding: 16px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
-.modern-table tr:hover { background-color: #f8fafc; }
+.modern-table tr:hover { background-color: rgba(248, 250, 252, 0.8); }
 
 .text-muted { color: #64748b; font-size: 15px; font-weight: 800; }
 

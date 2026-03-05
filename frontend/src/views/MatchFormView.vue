@@ -1,53 +1,55 @@
 <template>
-  <div class="form-wrapper">
-    <div class="form-container">
-      <div class="form-header">
-        <div class="icon-container">
-          <span class="anim-ball text-4xl">⚽</span>
+  <div class="stadium-bg">
+    <div class="form-wrapper">
+      <div class="glass-container form-container">
+        <div class="form-header">
+          <div class="icon-container">
+            <span class="anim-ball text-4xl">⚽</span>
+          </div>
+          <h2>Programar Encuentro</h2>
+          <p>Configura los equipos, fecha y el estadio del partido</p>
         </div>
-        <h2>Programar Encuentro</h2>
-        <p>Configura los equipos, fecha y el estadio del partido</p>
+
+        <form @submit.prevent="createMatch" class="match-form">
+          
+          <div class="form-group">
+            <label>🏠 Equipo Local</label>
+            <select v-model="match.local_team_id" class="form-control" required>
+              <option value="" disabled>Selecciona al equipo de casa</option>
+              <option v-for="team in teams" :key="team.id" :value="team.id">
+                {{ team.name }}
+              </option>
+            </select>
+          </div>
+
+          <div class="vs-divider"><span>VS</span></div>
+
+          <div class="form-group">
+            <label>✈️ Equipo Visitante</label>
+            <select v-model="match.visitor_team_id" class="form-control" required>
+              <option value="" disabled>Selecciona al equipo rival</option>
+              <option v-for="team in teams" :key="team.id" :value="team.id">
+                {{ team.name }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>📅 Fecha y Hora del partido</label>
+            <input type="datetime-local" v-model="match.match_date" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label>🏟️ Estadio / Cancha</label>
+            <input type="text" v-model="match.location" class="form-control" placeholder="Ej. Estadio Monumental" required>
+          </div>
+
+          <div class="action-buttons">
+            <button type="submit" class="btn btn-primary">✅ Confirmar Partido</button>
+            <button type="button" class="btn btn-secondary" @click="router.push('/')">⬅️ Volver a la Tabla</button>
+          </div>
+        </form>
       </div>
-
-      <form @submit.prevent="createMatch" class="match-form">
-        
-        <div class="form-group">
-          <label>🏠 Equipo Local</label>
-          <select v-model="match.local_team_id" class="form-control" required>
-            <option value="" disabled>Selecciona al equipo de casa</option>
-            <option v-for="team in teams" :key="team.id" :value="team.id">
-              {{ team.name }}
-            </option>
-          </select>
-        </div>
-
-        <div class="vs-divider"><span>VS</span></div>
-
-        <div class="form-group">
-          <label>✈️ Equipo Visitante</label>
-          <select v-model="match.visitor_team_id" class="form-control" required>
-            <option value="" disabled>Selecciona al equipo rival</option>
-            <option v-for="team in teams" :key="team.id" :value="team.id">
-              {{ team.name }}
-            </option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>📅 Fecha y Hora del Silbatazo</label>
-          <input type="datetime-local" v-model="match.match_date" class="form-control" required>
-        </div>
-
-        <div class="form-group">
-          <label>🏟️ Estadio / Cancha</label>
-          <input type="text" v-model="match.location" class="form-control" placeholder="Ej. Estadio Monumental" required>
-        </div>
-
-        <div class="action-buttons">
-          <button type="submit" class="btn btn-primary">✅ Confirmar Partido</button>
-          <button type="button" class="btn btn-secondary" @click="router.push('/')">⬅️ Volver a la Tabla</button>
-        </div>
-      </form>
     </div>
   </div>
 </template>
@@ -105,12 +107,14 @@ onMounted(fetchTeams);
 </script>
 
 <style scoped>
-.form-wrapper { display: flex; justify-content: center; padding: 40px 20px; }
-.form-container { width: 100%; max-width: 550px; background: #ffffff; padding: 40px; border-radius: 16px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3); border-top: 6px solid #10b981; }
+.stadium-bg { min-height: 100vh; background-image: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.85)), url('https://images.unsplash.com/photo-1518605368461-1ee125232938?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80'); background-size: cover; background-position: center; background-attachment: fixed; }
+.form-wrapper { display: flex; justify-content: center; padding: 40px 20px; min-height: 100vh; align-items: center; }
+.glass-container { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.2); }
+.form-container { width: 100%; max-width: 550px; padding: 40px; border-radius: 16px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3); border-top: 6px solid #10b981; }
 .form-header { text-align: center; margin-bottom: 30px; }
 .icon-container { font-size: 40px; margin-bottom: 10px; }
 .form-header h2 { color: #064e3b; font-size: 28px; font-weight: 800; margin: 0 0 5px 0; text-transform: uppercase; }
-.form-header p { color: #64748b; font-size: 15px; margin: 0; font-weight: 500; }
+.form-header p { color: #475569; font-size: 15px; margin: 0; font-weight: 500; }
 
 .form-group { margin-bottom: 20px; }
 label { display: block; margin-bottom: 8px; color: #334155; font-size: 14px; font-weight: 700; text-transform: uppercase; }
