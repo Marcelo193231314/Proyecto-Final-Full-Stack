@@ -25,7 +25,7 @@
         </select>
       </div>
 
-      <div class="glass-card table-card">
+      <div class="table-card">
         <table class="modern-table">
           <thead>
             <tr>
@@ -146,7 +146,17 @@ const logout = () => { authStore.logout(); router.push('/login'); };
 </script>
 
 <style scoped>
-.stadium-bg { min-height: 100vh; background-image: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.85)), url('https://images.unsplash.com/photo-1518605368461-1ee125232938?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80'); background-size: cover; background-position: center; background-attachment: fixed; padding: 40px 0; }
+/* --- AQUÍ ESTÁ EL CAMBIO PRINCIPAL --- */
+/* La imagen ahora cubre TODA la pantalla de inicio a fin */
+.stadium-bg { 
+  min-height: 100vh; 
+  background-image: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.85)), url('../assets/fondo_tabla.jfif'); 
+  background-size: cover; 
+  background-position: center; 
+  background-attachment: fixed; 
+  padding: 40px 0; 
+}
+
 .dashboard-container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
 .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
 .text-white { color: #ffffff !important; }
@@ -154,7 +164,14 @@ const logout = () => { authStore.logout(); router.push('/login'); };
 .title-section h1 { margin: 0; font-size: 32px; text-transform: uppercase; }
 .subtitle { margin: 5px 0 0 0; font-size: 16px; font-weight: 500; }
 
-.glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid rgba(255, 255, 255, 0.2); }
+/* Tarjetas semitransparentes superiores */
+.glass-card { 
+  background: rgba(255, 255, 255, 0.1); 
+  backdrop-filter: blur(10px); 
+  border-radius: 12px; 
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+  border: 1px solid rgba(255, 255, 255, 0.2); 
+}
 
 .btn { padding: 12px 20px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; transition: all 0.2s; font-size: 14px; text-transform: uppercase; }
 .btn-primary { background: #10b981; color: white; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
@@ -167,38 +184,47 @@ const logout = () => { authStore.logout(); router.push('/login'); };
 .toolbar { margin-bottom: 20px; display: flex; gap: 15px; }
 .admin-actions { display: flex; gap: 10px; }
 
-.filter-card { padding: 15px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 15px; border-left: 5px solid #10b981; }
-.filter-label { font-weight: 700; color: #0f172a; font-size: 15px; text-transform: uppercase; }
+.filter-card { padding: 15px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 15px; border-left: 5px solid #10b981; background: rgba(15, 23, 42, 0.8) !important; color: white;}
+.filter-label { font-weight: 700; color: #ffffff; font-size: 15px; text-transform: uppercase; }
 .form-select { padding: 10px; border: 2px solid #cbd5e1; border-radius: 8px; font-weight: 600; color: #1e293b; outline: none; background: white;}
 .form-select:focus { border-color: #10b981; }
 
-.table-card { overflow-x: auto; }
+/* --- CONTENEDOR DE LA TABLA PRINCIPAL --- */
+/* Ya no tiene la imagen, ahora es un cristal oscuro desenfocado */
+.table-card { 
+  overflow-x: auto; 
+  background: rgba(15, 23, 42, 0.7); /* Color oscuro semitransparente */
+  backdrop-filter: blur(8px); /* Efecto cristal */
+  border-radius: 12px; 
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4); 
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
 .modern-table { width: 100%; border-collapse: collapse; text-align: center; }
-.modern-table th { background-color: rgba(6, 78, 59, 0.95); padding: 18px; font-size: 13px; font-weight: 800; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; }
-.modern-table td { padding: 16px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
-.modern-table tr:hover { background-color: rgba(248, 250, 252, 0.8); }
-.text-muted { color: #64748b; font-size: 14px; font-weight: 700; }
-.team-name { color: #0f172a; font-size: 16px; font-weight: 800; text-transform: uppercase; }
+.modern-table th { background-color: rgba(6, 78, 59, 0.85); padding: 18px; font-size: 13px; font-weight: 800; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; }
+
+.modern-table td { padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); vertical-align: middle; }
+.modern-table tr:hover { background-color: rgba(255, 255, 255, 0.1); }
+
+.text-muted { color: #cbd5e1; font-size: 14px; font-weight: 700; }
+.team-name { color: #ffffff; font-size: 16px; font-weight: 800; text-transform: uppercase; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
+.date-cell { font-size: 14px; color: #e2e8f0; font-weight: 600; }
 
 .score-editor { display: flex; align-items: center; justify-content: center; gap: 8px; }
-.score-input { width: 50px; height: 40px; text-align: center; border-radius: 8px; border: 2px solid #10b981; background: #f0fdf4; font-weight: 800; font-size: 16px; color: #064e3b; }
+.score-input { width: 50px; height: 40px; text-align: center; border-radius: 8px; border: 2px solid #10b981; background: rgba(240, 253, 244, 0.9); font-weight: 800; font-size: 16px; color: #064e3b; }
 .score-input:focus { outline: none; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); }
-.score-divider { font-weight: bold; color: #94a3b8; }
-.score-display { font-size: 20px; font-weight: 900; color: #ffffff; background: #0f172a; padding: 8px 16px; border-radius: 8px; display: inline-block; letter-spacing: 2px; }
+.score-divider { font-weight: bold; color: #cbd5e1; }
+.score-display { font-size: 20px; font-weight: 900; color: #ffffff; background: rgba(15, 23, 42, 0.8); padding: 8px 16px; border-radius: 8px; display: inline-block; letter-spacing: 2px; border: 1px solid rgba(255,255,255,0.1); }
 
-.date-cell { font-size: 14px; color: #475569; font-weight: 600; }
 .status-badge { padding: 8px 14px; border-radius: 20px; font-size: 13px; font-weight: 800; display: inline-block; text-transform: uppercase; }
-.badge-pending { background-color: #ecfdf5; color: #10b981; animation: pulse-live 2s infinite; }
-.badge-finished { background-color: #f1f5f9; color: #64748b; }
+.badge-pending { background-color: rgba(236, 253, 245, 0.9); color: #059669; animation: pulse-live 2s infinite; }
+.badge-finished { background-color: rgba(241, 245, 249, 0.9); color: #475569; }
 
 .actions-cell { display: flex; gap: 8px; justify-content: center; }
-.action-btn { background: #ffffff; border: 2px solid #e2e8f0; border-radius: 8px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-size: 18px; }
-.action-btn:hover { transform: translateY(-3px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-.btn-save:hover { background: #ecfdf5; border-color: #10b981; }
-.btn-sim:hover { background: #eff6ff; border-color: #3b82f6; }
-.btn-delete:hover { background: #fef2f2; border-color: #ef4444; }
+.action-btn { background: rgba(255,255,255,0.9); border: 2px solid transparent; border-radius: 8px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-size: 18px; }
+.action-btn:hover { transform: translateY(-3px); box-shadow: 0 4px 6px rgba(0,0,0,0.3); background: #ffffff; }
 
-.pagination-container { display: flex; justify-content: center; align-items: center; margin-top: 25px; gap: 20px; padding: 15px; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(5px); border: none; }
+.pagination-container { display: flex; justify-content: center; align-items: center; margin-top: 25px; gap: 20px; padding: 15px; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1); }
 .btn-page { padding: 10px 20px; cursor: pointer; background: #10b981; color: #ffffff; border: none; border-radius: 8px; font-weight: 700; transition: all 0.2s; text-transform: uppercase; }
 .btn-page:hover:not(:disabled) { background: #059669; transform: scale(1.05); }
 .btn-page:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; color: #475569;}

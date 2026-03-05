@@ -7,36 +7,52 @@
             <span class="anim-ball text-4xl">⚽</span>
           </div>
           <h2>Liga Manager</h2>
-          <p>Ingresa a tu cuenta para continuar</p>
+          <p>Ingresa a tu cuenta para ver tus encuentros</p>
         </div>
 
         <form @submit.prevent>
           <div class="form-group">
             <label>Correo Electrónico</label>
-            <input type="email" v-model="email" class="form-control" placeholder="usuario@correo.com" required />
+            <input type="email" v-model="email" class="form-control" placeholder="dt@equipo.com" required />
           </div>
           
           <div class="form-group">
             <label>Contraseña</label>
-            <input type="password" v-model="password" class="form-control" placeholder="••••••••" required />
+            <div class="password-container">
+              <input 
+                :type="showPassword ? 'text' : 'password'" 
+                v-model="password" 
+                class="form-control password-input" 
+                placeholder="••••••••" 
+                required 
+              />
+              <button 
+                type="button" 
+                class="toggle-password-btn" 
+                @click="showPassword = !showPassword"
+                title="Mostrar/Ocultar contraseña"
+              >
+                {{ showPassword ? '🔓' : '🔒' }}
+              </button>
+            </div>
           </div>
           
           <div class="action-buttons">
             <button type="button" class="btn btn-user" @click="handleLogin('user')">
-              Iniciar Sesión
+              Entrar a la Cancha
             </button>
             <button type="button" class="btn btn-admin" @click="handleLogin('admin')">
-              Entrar como Administrador
+              Acceso de Administrador
             </button>
           </div>
         </form>
         
         <div v-if="error" class="error-message">
-          {{ error }}
+          📋 {{ error }}
         </div>
         
         <p class="footer-text">
-          ¿No tienes una cuenta? <router-link to="/register">Regístrate aquí</router-link>
+          ¿Fichaje nuevo? <router-link to="/register">Regístrate aquí</router-link>
         </p>
       </div>
     </div>
@@ -51,12 +67,13 @@ import { useRouter } from 'vue-router';
 const email = ref('');
 const password = ref('');
 const error = ref('');
+const showPassword = ref(false); // Nueva variable para controlar la visibilidad
 const authStore = useAuthStore();
 const router = useRouter();
 
 const handleLogin = async (role) => {
   if (!email.value || !password.value) {
-    error.value = 'Por favor, completa todos los campos.';
+    error.value = 'Falta información en la alineación.';
     return;
   }
   try {
@@ -78,10 +95,32 @@ const handleLogin = async (role) => {
 .icon-container { font-size: 40px; margin-bottom: 10px; }
 .login-header h2 { color: #064e3b; font-size: 28px; font-weight: 800; margin: 0 0 5px 0; text-transform: uppercase; }
 .login-header p { color: #475569; font-size: 15px; margin: 0; font-weight: 500;}
+
 .form-group { margin-bottom: 20px; }
 label { display: block; margin-bottom: 8px; color: #334155; font-size: 14px; font-weight: 700; text-transform: uppercase; }
 .form-control { width: 100%; padding: 14px 16px; background-color: #f8fafc; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 15px; transition: all 0.3s ease; }
 .form-control:focus { background-color: #ffffff; border-color: #10b981; outline: none; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15); }
+
+/* Nuevos estilos para el botón de mostrar contraseña */
+.password-container { position: relative; display: flex; align-items: center; }
+.password-input { padding-right: 45px; /* Deja espacio para que el texto no se superponga con el botón */ }
+.toggle-password-btn {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #64748b;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+.toggle-password-btn:hover { transform: scale(1.1); }
+.toggle-password-btn:focus { outline: none; }
+
 .action-buttons { display: flex; flex-direction: column; gap: 14px; margin-top: 30px; }
 .btn { width: 100%; padding: 14px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 0.5px; }
 .btn-user { background-color: #10b981; color: #ffffff; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
