@@ -4,8 +4,10 @@ import RegisterView from '../views/RegisterView.vue';
 import MatchesView from '../views/MatchesView.vue';
 import MatchFormView from '../views/MatchFormView.vue';
 import TeamsView from '../views/TeamsView.vue';
+import StandingsView from '../views/StandingsView.vue'; // <-- IMPORTAMOS LA VISTA AQUÍ
 import { useAuthStore } from '../stores/auth';
 import AdminDashboardView from '../views/AdminDashboardView.vue';
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -23,6 +25,12 @@ const router = createRouter({
       path: '/',
       name: 'matches',
       component: MatchesView,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/standings', // <-- AGREGAMOS LA RUTA AQUÍ
+      name: 'standings',
+      component: StandingsView,
       meta: { requiresAuth: true }
     },
     {

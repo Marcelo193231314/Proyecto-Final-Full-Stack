@@ -2,13 +2,11 @@ const pool = require('../config/db');
 
 const getMatches = async (req, res) => {
     try {
-        
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 5; 
         const offset = (page - 1) * limit;
         const statusFilter = req.query.status || '';
 
-        
         let query = `
             SELECT 
                 m.id, 
@@ -28,7 +26,6 @@ const getMatches = async (req, res) => {
         const queryParams = [];
         const countParams = [];
 
-        
         if (statusFilter) {
             query += ` WHERE m.status = ?`;
             countQuery += ` WHERE status = ?`;
@@ -36,15 +33,12 @@ const getMatches = async (req, res) => {
             countParams.push(statusFilter);
         }
 
-        
-        query += ` ORDER BY m.match_date ASC LIMIT ? OFFSET ?`;
-        queryParams.push(limit, offset);
+        // CORRECCIÓN AQUÍ: Pasamos limit y offset directamente a la cadena SQL
+        query += ` ORDER BY m.match_date ASC LIMIT ${limit} OFFSET ${offset}`;
 
-        
         const [[{ total }]] = await pool.query(countQuery, countParams);
         const [matches] = await pool.query(query, queryParams);
 
-        
         res.json({
             data: matches,
             totalItems: total,
@@ -71,13 +65,10 @@ const createMatch = async (req, res) => {
     }
 };
 
-
-
 const updateMatchStatus = async (req, res) => {
     try {
         const { id } = req.params;
         const { status, local_score, visitor_score } = req.body;
-        
         
         const validStatuses = ['Pendiente', 'Finalizado'];
         const finalStatus = validStatuses.includes(status) ? status : 'Pendiente';
@@ -108,9 +99,6 @@ const deleteMatch = async (req, res) => {
     }
 };
 
-
-
-
 const getMatchById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -140,6 +128,5 @@ const getMatchById = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
-
 
 module.exports = { getMatches, createMatch, updateMatchStatus, deleteMatch, getMatchById };
