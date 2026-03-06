@@ -4,7 +4,6 @@
       <div class="nav-links">
         <router-link to="/" class="nav-item">⚽ Partidos</router-link>
         <router-link to="/standings" class="nav-item">🏆 Tabla de Posiciones</router-link>
-        <router-link v-if="authStore.user?.role === 'admin'" to="/teams" class="nav-item">🛡️ Equipos</router-link>
       </div>
       <button @click="handleLogout" class="logout-btn">Cerrar Sesión</button>
     </nav>
